@@ -7,6 +7,7 @@ apply plugin: 'eclipse'
 
 group = 'com.github.schnitker.log4j12'   
 version = '1.3.0'
+description = 'Fork of Log4j 1.2 project, stripped of the additional appenders and classes that cause security problems.'
 
 defaultTasks 'assemble'
 
@@ -85,10 +86,12 @@ publishing {
 
             pom {
                 afterEvaluate {
-					name = project.description
+					name = project.name
 					description = project.description
 				}
 				url = "https://github.com/Schnitker/log4j-min"
+				description = project.description
+				name = project.name
 
 				organization {
 					name = "Rainer Schnitker"
