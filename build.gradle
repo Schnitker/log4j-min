@@ -1,0 +1,164 @@
+apply plugin: 'java-library'
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+apply plugin: 'eclipse'
+
+////////////////////////////////////////////////////////////////////////////
+
+group = 'com.github.schnitker.log4j12'   
+version = '1.3.0'
+
+defaultTasks 'assemble'
+
+repositories {        
+    mavenCentral()
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+sourceCompatibility = 8
+targetCompatibility = 8
+
+if (JavaVersion.current().isJava9Compatible()) {
+    compileJava.options.release = 8
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    if ( JavaVersion.current().isJava10Compatible() ) {
+        options.addBooleanOption('html5', true);
+    }
+}
+
+jar {
+    manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
+    manifest.attributes["Implementation-Title"] = project.name
+    manifest.attributes["Implementation-Version"] = project.version
+    manifest.attributes["Implementation-Vendor"] = 'com.github.schnitker'
+    manifest.attributes["Automatic-Module-Name"] = 'schnitker.log4j'
+}
+
+
+eclipse {
+    jdt {
+        file {
+            withProperties { properties ->
+                properties.setProperty('org.eclipse.jdt.core.compiler.problem.rawTypeReference', 'ignore')
+                properties.setProperty('org.eclipse.jdt.core.compiler.problem.uncheckedTypeOperation', 'ignore')
+                properties.setProperty('org.eclipse.jdt.core.compiler.problem.varargsArgumentNeedCast', 'ignore' )
+            }
+        }
+    }
+}
+
+dependencies {
+	testImplementation 'junit:junit:4.13.2'
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+signing {
+	required { 
+		gradle.taskGraph.hasTask("publish")
+	}
+    sign configurations.archives
+}
+
+def localPublish = true
+
+publishing {
+    repositories {
+        maven {
+            if ( localPublish ) {
+                url "file:///${rootProject.projectDir}/upload"
+            } else {
+                url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
+                }
+            }
+        }
+    }
+
+    publications {
+        mavenJava( MavenPublication ) {
+            from components.java
+
+            pom {
+                afterEvaluate {
+					name = project.description
+					description = project.description
+				}
+				url = "https://github.com/Schnitker/log4j-min"
+
+				organization {
+					name = "Rainer Schnitker"
+					url = "https://github.com/Schnitker"
+				}
+		        scm {
+		          	connection = 'scm:git:git://github.com/Schnitker/log4j-min'
+		          	developerConnection = 'scm:git:git://github.com/Schnitker/log4j-min'
+		          	url = 'https://github.com/Schnitker/log4j-min'
+		        }  
+		        licenses {
+		          	license {
+		            	name = 'The Apache License, Version 2.0'
+		            	url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+		          	}
+		        }
+				developers {
+					developer {
+						id = "rs"
+						name = "Rainer Schnitker"
+					}
+				} 
+            }
+        }
+    }            
+
+    generatePomFileForMavenJavaPublication {
+        destination = file( "$buildDir/libs/${project.name}-${project.version}.pom" )
+    }
+
+    generateMetadataFileForMavenJavaPublication {
+        outputFile = file( "$buildDir/libs/${project.name}-${project.version}.module" )
+    }
+}
+
+// task for artifacts/archives reference
+task generatePom( dependsOn: generatePomFileForMavenJavaPublication ) {
+    group = "Build"
+    description = "Build maven pom artefact."
+    ext.destFile = generatePomFileForMavenJavaPublication.destination
+}
+
+// task for artifacts/archives reference
+task generateModule( dependsOn: generateMetadataFileForMavenJavaPublication ) {
+    group = "Build"
+    description = "Build gradle module artefact."
+    ext.destFile = generateMetadataFileForMavenJavaPublication.outputFile
+}
+
+assemble.dependsOn generatePom
+assemble.dependsOn generateModule
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+    archives(generatePom.destFile) {
+        name 'pomfile'
+        type 'text'
+        builtBy generatePom
+    }
+    archives(generateModule.destFile) {
+        name 'module'
+        type 'text'
+        builtBy generateModule
+    }
+}
