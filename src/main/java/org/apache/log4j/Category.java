@@ -994,10 +994,9 @@ public class Category implements AppenderAttachable {
      appenders in all the categories including root contained in the
      default hierachy.
 
-     <p>Some appenders such as {@link org.apache.log4j.net.SocketAppender}
-     and {@link AsyncAppender} need to be closed before the
-     application exists. Otherwise, pending logging events might be
-     lost.
+     <p>Some appenders such as {@link AsyncAppender} need to be closed 
+     before the application exists. Otherwise, pending logging events 
+     might be lost.
 
      <p>The <code>shutdown</code> method is careful to close nested
      appenders before closing regular appenders. This is allows

@@ -56,10 +56,6 @@ public final class NOPLogger extends Logger {
     }
 
     /** {@inheritDoc} */
-    void closeNestedAppenders() {
-    }
-
-    /** {@inheritDoc} */
     public void debug(final Object message) {
     }
 

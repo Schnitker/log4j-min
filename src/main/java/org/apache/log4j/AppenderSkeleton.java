@@ -269,9 +269,7 @@ public abstract class AppenderSkeleton implements Appender, OptionHandler {
 
   /**
      Set the layout for this appender. Note that some appenders have
-     their own (fixed) layouts or do not use one. For example, the
-     {@link org.apache.log4j.net.SocketAppender} ignores the layout set
-     here. 
+     their own (fixed) layouts or do not use one.
   */
   public
   void setLayout(Layout layout) {

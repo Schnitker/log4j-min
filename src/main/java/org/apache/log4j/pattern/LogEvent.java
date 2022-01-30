@@ -139,7 +139,6 @@ public class LogEvent implements java.io.Serializable {
   // Serialization
   static final long serialVersionUID = -868428216207166145L;
 
-  static final Integer[] PARAM_ARRAY = new Integer[1];
   static final String TO_LEVEL = "toLevel";
   static final Class[] TO_LEVEL_PARAMS = new Class[] {int.class};
   static final Hashtable methodCache = new Hashtable(3); // use a tiny table
@@ -426,8 +425,7 @@ public class LogEvent implements java.io.Serializable {
 	  m = clazz.getDeclaredMethod(TO_LEVEL, TO_LEVEL_PARAMS);
 	  methodCache.put(className, m);
 	}
-	PARAM_ARRAY[0] = new Integer(p);
-	level = (Level) m.invoke(null,  PARAM_ARRAY);
+	level = (Level) m.invoke(null,  new Integer(p));
       }
     } catch(Exception e) {
 	LogLog.warn("Level deserialization failed, reverting to default.", e);

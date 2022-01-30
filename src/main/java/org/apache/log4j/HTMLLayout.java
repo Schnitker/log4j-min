@@ -74,8 +74,7 @@ public class HTMLLayout extends Layout {
      true, then the file name and line number of the statement
      at the origin of the log statement will be output.
 
-     <p>If you are embedding this layout within an {@link
-     org.apache.log4j.net.SMTPAppender} then make sure to set the
+     <p>If you are embedding this layout within an SMTPAppender then make sure to set the
      <b>LocationInfo</b> option of that appender as well.
    */
   public

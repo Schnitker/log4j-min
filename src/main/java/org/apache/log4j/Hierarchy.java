@@ -441,8 +441,7 @@ public class Hierarchy implements LoggerRepository, RendererSupport, ThrowableRe
      Shutting down a hierarchy will <em>safely</em> close and remove
      all appenders in all categories including the root logger.
 
-     <p>Some appenders such as {@link org.apache.log4j.net.SocketAppender}
-     and {@link AsyncAppender} need to be closed before the
+     <p>Some appenders such as {@link AsyncAppender} need to be closed before the
      application exists. Otherwise, pending logging events might be
      lost.
 

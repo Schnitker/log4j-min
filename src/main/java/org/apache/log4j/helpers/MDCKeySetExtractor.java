@@ -42,7 +42,7 @@ public final class MDCKeySetExtractor {
 
         try {
            getMethod = LoggingEvent.class.getMethod(
-                      "getPropertyKeySet", null);
+                      "getPropertyKeySet");
         } catch(Exception ex) {
             getMethod = null;
         }
@@ -56,7 +56,7 @@ public final class MDCKeySetExtractor {
         //
         Set keySet = null;
         if (getKeySetMethod != null) {
-              keySet = (Set) getKeySetMethod.invoke(event, null);
+              keySet = (Set) getKeySetMethod.invoke(event);
         } else {
             //
             //  for 1.2.14 and earlier could serialize and

@@ -189,7 +189,7 @@ public class LayoutDynamicMBean extends AbstractDynamicMBean {
 
     if(mu != null && mu.readMethod != null) {
       try {
-	return mu.readMethod.invoke(layout, null);
+	return mu.readMethod.invoke(layout);
       } catch(InvocationTargetException e) {
           if (e.getTargetException() instanceof InterruptedException
                   || e.getTargetException() instanceof InterruptedIOException) {
