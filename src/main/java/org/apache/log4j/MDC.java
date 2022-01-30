@@ -20,7 +20,7 @@ package org.apache.log4j;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
-import org.apache.log4j.helpers.Loader;
+
 import org.apache.log4j.helpers.ThreadLocalMap;
 
 /**
@@ -49,21 +49,16 @@ public class MDC {
   
   static final int HT_SIZE = 7;
 
-  boolean java1;
-  
   Object tlm;
 
   private Method removeMethod;
 
   private
   MDC() {
-    java1 = Loader.isJava1();
-    if(!java1) {
-      tlm = new ThreadLocalMap();
-    }
+    tlm = new ThreadLocalMap();
 
     try {
-      removeMethod = ThreadLocal.class.getMethod("remove", null);
+      removeMethod = ThreadLocal.class.getMethod("remove");
     } catch (NoSuchMethodException e) {
       // don't do anything - java prior 1.5
     }
@@ -139,35 +134,26 @@ public class MDC {
 
   private
   void put0(String key, Object o) {
-    if(java1 || tlm == null) {
-      return;
-    } else {
       Hashtable ht = (Hashtable) ((ThreadLocalMap)tlm).get();
       if(ht == null) {
         ht = new Hashtable(HT_SIZE);
         ((ThreadLocalMap)tlm).set(ht);
       }    
       ht.put(key, o);
-    }
   }
   
   private
   Object get0(String key) {
-    if(java1 || tlm == null) {
-      return null;
-    } else {       
       Hashtable ht = (Hashtable) ((ThreadLocalMap)tlm).get();
       if(ht != null && key != null) {
         return ht.get(key);
       } else {
         return null;
       }
-    }
   }
 
   private
   void remove0(String key) {
-    if(!java1 && tlm != null) {
       Hashtable ht = (Hashtable) ((ThreadLocalMap)tlm).get();
       if(ht != null) {
         ht.remove(key);
@@ -176,22 +162,16 @@ public class MDC {
           clear0();
         }
       } 
-    }
   }
 
 
   private
   Hashtable getContext0() {
-     if(java1 || tlm == null) {
-      return null;
-    } else {       
-      return (Hashtable) ((ThreadLocalMap)tlm).get();
-    }
+    return (Hashtable) ((ThreadLocalMap)tlm).get();
   }
 
   private
   void clear0() {
-    if(!java1 && tlm != null) {
       Hashtable ht = (Hashtable) ((ThreadLocalMap)tlm).get();
       if(ht != null) {
         ht.clear();
@@ -199,14 +179,12 @@ public class MDC {
       if(removeMethod != null) {
           // java 1.3/1.4 does not have remove - will suffer from a memory leak
           try {
-            removeMethod.invoke(tlm, null);
+            removeMethod.invoke(tlm);
           } catch (IllegalAccessException e) {
             // should not happen
           } catch (InvocationTargetException e) {
             // should not happen
           }
       }
-    }
   }
-
 }
