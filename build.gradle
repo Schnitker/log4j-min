@@ -1,6 +1,6 @@
 apply plugin: 'java-library'
-apply plugin: 'signing'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 apply plugin: 'eclipse'
 
 ////////////////////////////////////////////////////////////////////////////
@@ -61,13 +61,6 @@ dependencies {
 }
 
 ////////////////////////////////////////////////////////////////////////////
-
-signing {
-	required { 
-		gradle.taskGraph.hasTask("publish")
-	}
-    sign configurations.archives
-}
 
 def localPublish = true
 
@@ -131,6 +124,13 @@ publishing {
     }
 }
 
+signing {
+	required { 
+		gradle.taskGraph.hasTask("publish")
+	}
+    sign publishing.publications.mavenJava
+}
+
 // task for artifacts/archives reference
 task generatePom( dependsOn: generatePomFileForMavenJavaPublication ) {
     group = "Build"
@@ -147,18 +147,3 @@ task generateModule( dependsOn: generateMetadataFileForMavenJavaPublication ) {
 
 assemble.dependsOn generatePom
 assemble.dependsOn generateModule
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-    archives(generatePom.destFile) {
-        name 'pomfile'
-        type 'text'
-        builtBy generatePom
-    }
-    archives(generateModule.destFile) {
-        name 'module'
-        type 'text'
-        builtBy generateModule
-    }
-}
