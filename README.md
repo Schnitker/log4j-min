@@ -1,7 +1,7 @@
 log4-min
 ========
 
-Fork of Log4j 1.2 project, stripped of the additional appenders and classes that cause security problems.
+Fork of Log4j 1.2 project, without additional appenders and classes causing security issues.
 
 CVE:
  * **CVE-2019-17571** - high severity - SocketServer
