@@ -43,7 +43,7 @@ allprojects {
       resolutionStrategy {
         dependencySubstitution {
           // log4j 1.2 replacement
-          substitute module('log4j:log4j') with module( 'com.github.schnitker.log4j12:log4j-min:1.3.0' )                  
+          substitute module('log4j:log4j') with module( 'com.github.schnitker.log4j-min:1.3.0' )
         }
       }
     }
