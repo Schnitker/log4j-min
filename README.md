@@ -33,6 +33,24 @@ The project uses the Gradle build system.
 
  * **Building artifacts**: Call 'gradlew assemble'.
 
+### Maven Artifact
+
+Gradle:
+```groovy
+dependencies {
+  compile 'com.github.schnitker.log4j12:log4j-min:1.3.0'
+}
+```
+
+Maven:
+```xml
+  <dependency>
+    <groupId>com.github.schnitker.log4j12</groupId>
+    <artifactId>log4j-min</artifactId>
+    <version>1.3.0</version>
+  </dependency>
+```
+
 ### Replace default log4j library 
 
 build.gradle:
